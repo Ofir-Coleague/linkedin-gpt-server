@@ -1,5 +1,5 @@
 const express = require('express');
-const { scrapeProfileData, generateEmail } = require('./index');
+const { scrapeProfileData } = require('./index');
 require('dotenv').config();
 
 const app = express();
@@ -11,8 +11,7 @@ app.get('/profile', async (req, res) => {
 
   try {
     const profileData = await scrapeProfileData(url);
-    const email = await generateEmail(profileData);
-    res.send({ profileData, email });
+    res.send({ profileData });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error processing profile');
