@@ -1,5 +1,5 @@
 const express = require('express');
-const { scrapeProfileData } = require('./index');
+const { scrapeProfileData, generateEmail } = require('./index');
 require('dotenv').config();
 
 const app = express();
@@ -10,14 +10,26 @@ app.get('/profile', async (req, res) => {
   if (!url) return res.status(400).send('Missing LinkedIn URL');
 
   try {
+    console.log(`🔍 Scraping profile: ${url}`);
     const profileData = await scrapeProfileData(url);
+    console.log('✅ Profile data:', profileData);
+
+    // אם רוצים גם לייצר מייל, בטל הערה מהשורות הבאות:
+    // const email = await generateEmail(profileData);
+    // console.log('✉️ Email generated:', email);
+
+    // שליחה עם מייל:
+    // res.send({ profileData, email });
+
+    // שליחה בלי מייל, רק לוודא שהחלק של לינקדאין עובד:
     res.send({ profileData });
+
   } catch (err) {
-    console.error(err);
+    console.error('❌ Error processing profile:', err);
     res.status(500).send('Error processing profile');
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
