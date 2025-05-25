@@ -1,8 +1,9 @@
 const { chromium } = require('playwright');
-const OpenAI = require('openai');
-require('dotenv').config();
+const { OpenAI } = require('openai');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 async function scrapeProfileData(profileUrl) {
   const browser = await chromium.launch({ headless: true });
@@ -16,6 +17,7 @@ async function scrapeProfileData(profileUrl) {
     secure: true,
     sameSite: 'Lax'
   }]);
+
   const page = await context.newPage();
   await page.goto(profileUrl, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(3000);
