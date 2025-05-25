@@ -1,10 +1,5 @@
 require('dotenv').config();
 const { chromium } = require('playwright');
-const { OpenAI } = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
 
 async function scrapeProfileData(profileUrl) {
   const browser = await chromium.launch({ headless: true });
@@ -43,31 +38,4 @@ async function scrapeProfileData(profileUrl) {
   return { name, headline, about, posts };
 }
 
-async function generateEmail(profileData) {
-  const prompt = `
-שם: ${profileData.name}
-Headline: ${profileData.headline}
-About: ${profileData.about || 'אין'}
-פוסטים אחרונים:
-${profileData.posts && profileData.posts.length > 0 ? profileData.posts.join('\n---\n') : 'לא נמצאו'}
-
-יש לי שתי תבניות מייל:
-A – סגנון ישיר ודינמי
-B – סגנון רך ומסביר
-
-בחר את אחת מהן לפי מה שנראה לך מהפרופיל והפוסטים. כתוב מייל מותאם אישית לפי התבנית, ואחר כך הסבר לבחירה שלך.
-השב כך:
-1. טיוטת מייל
-2. הסבר לבחירה
-`;
-
-  const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.7,
-  });
-
-  return response.choices[0].message.content;
-}
-
-module.exports = { scrapeProfileData, generateEmail };
+module.exports = { scrapeProfileData };
