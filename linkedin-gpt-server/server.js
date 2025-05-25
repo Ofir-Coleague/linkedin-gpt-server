@@ -1,4 +1,6 @@
 const express = require('express');
+console.log('🔐 LI_AT:', process.env.LI_AT ? '[OK]' : '[MISSING]');
+
 const { scrapeProfileData, generateEmail } = require('./index');
 require('dotenv').config();
 
